@@ -3,7 +3,11 @@ var passport = require("passport");
 var GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 var config = require("./config");
 var app = express();
+var bodyParser = require("body-parser");
+
 var googleProfile = {};
+
+app.use(bodyParser.json()); 
 
 passport.serializeUser(function(user, done) {
 	done(null, user);
@@ -39,8 +43,10 @@ app.get("/", function(req, res) {
 	res.render("index", { user: req.user });
 });
 
-app.get("/logged", function(req, res) {
-	res.render("logged", { user: googleProfile });
+
+
+app.get('/logged', function(req, res){
+    res.render('logged', { user: googleProfile });
 });
 //Passport routes
 app.get(
@@ -49,6 +55,7 @@ app.get(
 		scope: ["profile", "email"]
 	})
 );
+
 app.get(
 	"/auth/google/callback",
 	passport.authenticate("google", {
